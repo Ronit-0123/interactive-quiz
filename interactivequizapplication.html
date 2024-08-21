@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <style>
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .options input {
+            margin-right: 10px;
+        }
+
+        #submit {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #score {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz"></div>
+        <button id="submit">Submit</button>
+        <div id="score"></div>
+    </div>
+
+    <script>
+        const quiz = [
+            {
+                question: "What is the capital of France?",
+                options: ["Paris", "London", "Berlin", "Rome"],
+                correctAnswer: "Paris"
+            },
+            {
+                question: "What is the largest planet in our solar system?",
+                options: ["Earth", "Jupiter", "Mars", "Venus"],
+                correctAnswer: "Jupiter"
+            },
+            {
+                question: "Which is the smallest country in the world?",
+                option: ["luxemberg", "france", "vatican city", "italy"],
+                correctAnswer: "vatican city"
+            }
+        ];
+        
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.textContent = quiz[currentQuestionIndex].question;
+
+            const optionsElement = document.createElement('div');
+            optionsElement.classList.add('options');
+
+            quiz[currentQuestionIndex].options.forEach(option => {
+                const optionLabel = document.createElement('label');
+                const optionInput = document.createElement('input');
+                optionInput.type = 'radio';
+                optionInput.name = 'option';
+                optionInput.value = option;
+
+                optionLabel.appendChild(optionInput);
+                optionLabel.append(option);
+
+                optionsElement.appendChild(optionLabel);
+                optionsElement.appendChild(document.createElement('br'));
+            });
+
+            const quizContainer = document.getElementById('quiz');
+            quizContainer.innerHTML = '';
+            quizContainer.appendChild(questionElement);
+            quizContainer.appendChild(optionsElement);
+        }
+
+        function showScore() {
+            const scoreElement = document.getElementById('score');
+            scoreElement.textContent = `Your score: ${score} / ${quiz.length}`;
+        }
+
+        document.getElementById('submit').addEventListener('click', function() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (selectedOption && selectedOption.value === quiz[currentQuestionIndex].correctAnswer) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quiz.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz').innerHTML = '';
+                document.getElementById('submit').style.display = 'none';
+                showScore();
+            }
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
